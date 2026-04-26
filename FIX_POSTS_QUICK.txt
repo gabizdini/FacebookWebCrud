@@ -1,0 +1,50 @@
+# ERRO DE UPDATE EM POSTS - SOLUÇÃO RÁPIDA
+
+## ❌ Erro
+```
+java.lang.NumberFormatException: Cannot parse null string
+	at controller.PostsController.createPost(PostsController.java:100)
+```
+
+## ✅ Causas e Correções
+
+| Problema | Causa | Solução |
+|----------|-------|--------|
+| `user_id` era null | Parâmetro não validado | Adicionada validação antes de parseInt |
+| Erro ao editar | Usuários não carregados | `loadPost()` agora chama `loadUsers()` |
+| Select vazio | Lista não passada ao JSP | `loadUsers()` carrega lista de usuários |
+| Sem feedback | Nenhum placeholder | Adicionado `<option>` padrão e `required` |
+
+## 📝 Alterações
+
+### 1. PostsController.java
+```java
+// Validação adicionada:
+if (postUser == null || postUser.equals("")) {
+    throw new IllegalArgumentException("Usuário (user_id) é obrigatório!");
+}
+int postUserId = Integer.parseInt(postUser);
+
+// loadPost() agora também chama:
+loadUsers(req);
+```
+
+### 2. form_post.jsp
+```jsp
+<!-- Select melhorado -->
+<select name="user_id" class="form-control" required>
+    <option value="">-- Selecione um usuário --</option>
+    <option value="${usuario.id}" 
+        <c:if test="${usuario.id == post.getUser().getId()}">selected</c:if>>
+        ${usuario.name}
+    </option>
+</select>
+```
+
+## 🚀 Próximo Passo
+Recompile: `Project > Clean > Build Project`
+Reinicie: Tomcat Server (Stop → Start)
+
+---
+
+**Pronto para testar!** ✨

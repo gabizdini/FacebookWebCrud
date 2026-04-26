@@ -1,0 +1,37 @@
+# SOLUÇÃO RÁPIDA - ERRO DE LOGIN
+
+## Problema
+❌ Login não funciona com email/senha que existem no banco
+
+## Causa
+As senhas antigas estão em texto plano, mas o sistema espera senhas criptografadas.
+
+## Solução em 3 passos
+
+### 1️⃣ Compile o projeto
+- No Eclipse: `Project > Clean > Build Project`
+
+### 2️⃣ Reinicie o Tomcat
+- Stop Tomcat Server
+- Start Tomcat Server
+
+### 3️⃣ Execute a migração
+Acesse: `http://localhost:8080/facebook/admin/migrate-passwords`
+
+**Pronto!** ✅ Agora faça login normalmente.
+
+---
+
+## Para Testar Antes
+Acesse: `http://localhost:8080/facebook/admin/test-passwords`
+Você verá o status de todas as senhas (TEXTO PLANO ou CRIPTOGRAFADA)
+
+---
+
+## O que foi implementado
+
+✅ **PasswordMigration.java** - Classe que criptografa senhas automaticamente
+✅ **PasswordMigrationServlet.java** - Interface web para executar migração
+✅ **MySQLUserDAO.java** - Melhorado com comentários
+
+Veja `MIGRATION_README.md` para detalhes completos.

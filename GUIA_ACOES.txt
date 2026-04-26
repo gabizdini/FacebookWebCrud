@@ -1,0 +1,227 @@
+# ✅ GUIA DE AÇÕES - IMPLEMENTE AS CORREÇÕES
+
+## 🎯 OBJETIVO
+Corrigir 2 erros encontrados no projeto:
+1. ❌ Login não funciona (senhas em texto plano)
+2. ❌ Update de posts falha (user_id null)
+
+---
+
+## ⏱️ TEMPO ESTIMADO: 10 MINUTOS
+
+---
+
+## AÇÃO 1️⃣: PREPARAR O AMBIENTE
+
+### 1.1 - Verificar Arquivos Criados
+```
+✓ model/utils/PasswordMigration.java (CRIADO - NÃO EDITE)
+✓ controller/PasswordMigrationServlet.java (CRIADO - NÃO EDITE)
+✓ controller/PostsController.java (MODIFICADO - ✅ PRONTO)
+✓ webapp/form_post.jsp (MODIFICADO - ✅ PRONTO)
+✓ model/dao/MySQLUserDAO.java (MODIFICADO - ✅ PRONTO)
+```
+
+**Status:** ✅ TODOS OS ARQUIVOS JÁ FORAM MODIFICADOS
+
+### 1.2 - Compilar o Projeto
+```bash
+# No Eclipse:
+1. Menu: Project
+2. Clique: Clean...
+3. Selecione: "Clean all projects"
+4. Clique: Clean
+5. Aguarde (pode levar 1-2 minutos)
+6. Menu: Project
+7. Clique: Build Project (ou Ctrl+B)
+8. Aguarde conclusão
+```
+
+**Resultado esperado:** ✅ Sem erros no console
+
+### 1.3 - Reiniciar Tomcat
+```bash
+# No Eclipse (Servers view):
+1. Clique com botão direito: "Tomcat v10.1 Server at localhost"
+2. Clique: Stop
+3. Aguarde até aparecer "Server stopped" (vermelho)
+4. Clique com botão direito novamente
+5. Clique: Start
+6. Aguarde até aparecer "Server started" (verde)
+```
+
+**Resultado esperado:** ✅ Tomcat iniciando sem erros
+
+---
+
+## AÇÃO 2️⃣: CORRIGIR PROBLEMA DE LOGIN
+
+### 2.1 - Verificar Status das Senhas
+```
+1. Abra o navegador
+2. Acesse: http://localhost:8080/facebook/admin/test-passwords
+3. Veja o status:
+   - TEXTO PLANO = precisa migrar
+   - CRIPTOGRAFADA = já foi migrada
+```
+
+**Resultado esperado:** 
+- Se mostrar "TEXTO PLANO" → continue para 2.2
+- Se mostrar "CRIPTOGRAFADA" → vá para AÇÃO 3
+
+### 2.2 - Executar Migração
+```
+1. Abra o navegador
+2. Acesse: http://localhost:8080/facebook/admin/migrate-passwords
+3. Aguarde a mensagem de sucesso: "✓ Migração concluída com sucesso!"
+4. Veja o relatório com:
+   - Total migrado: X
+   - Total com erro: 0
+```
+
+**Resultado esperado:** ✅ Mensagem verde de sucesso
+
+### 2.3 - Verificar Migração
+```
+1. Acesse novamente: http://localhost:8080/facebook/admin/test-passwords
+2. Todas as senhas devem estar: CRIPTOGRAFADA
+```
+
+**Resultado esperado:** ✅ Todas as senhas com 44 caracteres Base64
+
+### 2.4 - Testar Login
+```
+1. Vá para: http://localhost:8080/facebook/login.jsp
+2. Use o email de um usuário que já existia
+3. Use a senha original (em texto plano)
+4. Clique: Logar
+```
+
+**Resultado esperado:** ✅ Login bem-sucedido, redirecionado para homepage
+
+---
+
+## AÇÃO 3️⃣: CORRIGIR PROBLEMA DE POSTS
+
+### 3.1 - Testar Criar Novo Post
+```
+1. Faça login
+2. Clique: "Posts" no menu
+3. Clique: "Novo Post" (ou similar)
+4. Preencha:
+   - Conteúdo: "Teste de novo post"
+   - Usuário: selecione um da lista
+5. Clique: Enviar
+```
+
+**Resultado esperado:** ✅ Post criado com sucesso
+
+### 3.2 - Testar Editar Post
+```
+1. Na lista de posts
+2. Clique: "Editar" em um post existente
+3. Verifique:
+   - ✓ Título diz "Editar post"
+   - ✓ Conteúdo pré-preenchido
+   - ✓ Usuário atual está selecionado
+   - ✓ Lista de usuários com múltiplas opções
+4. Altere o conteúdo
+5. Clique: Enviar
+```
+
+**Resultado esperado:** ✅ Post editado com sucesso, sem erro NumberFormatException
+
+### 3.3 - Testar Cancelar
+```
+1. Clique em um post para editar
+2. Clique: Cancelar
+```
+
+**Resultado esperado:** ✅ Volta para a lista de posts
+
+### 3.4 - Testar Deletar
+```
+1. Na lista de posts
+2. Clique: "Deletar" em um post
+```
+
+**Resultado esperado:** ✅ Post deletado com sucesso
+
+---
+
+## ✨ VERIFICAÇÃO FINAL
+
+### Checklist de Testes
+- [ ] Compilação sem erros
+- [ ] Tomcat iniciou corretamente
+- [ ] Senhas foram migradas (44 caracteres Base64)
+- [ ] Login funciona com credenciais antigas
+- [ ] Criar novo post funciona
+- [ ] Editar post funciona (usuário aparece selecionado)
+- [ ] Deletar post funciona
+- [ ] Botão cancelar funciona
+
+---
+
+## 🚨 SE ALGO DER ERRADO
+
+### Erro: "Cannot parse null string"
+```
+❌ Ainda aparecendo?
+✓ Solução: Recompile (Project > Clean > Build Project)
+✓ Reinicie Tomcat (Stop + Start)
+✓ Limpe cache: Ctrl+Shift+Delete no navegador
+```
+
+### Erro: "Cannot migrate passwords"
+```
+❌ Erro durante migração?
+✓ Verifique: MySQL está rodando?
+✓ Verifique: Credenciais do banco corretas?
+✓ Verifique: Tabela 'users' existe?
+✓ Veja logs: Windows > Show View > Servers
+```
+
+### Erro: "Usuário ou senha inválidos"
+```
+❌ Login não funciona após migração?
+✓ Verifique: Página de teste mostra "CRIPTOGRAFADA"?
+✓ Verifique: Você está digitando a senha correta?
+✓ Verifique: Email está exatamente igual ao cadastro?
+```
+
+---
+
+## 📞 SUPORTE
+
+Se os testes não funcionarem:
+
+1. **Verifique o console do Eclipse:**
+   - Windows > Show View > Console
+   - Procure por mensagens de erro
+
+2. **Verifique os logs do Tomcat:**
+   - Servers/Tomcat v10.1 Server at localhost-config/logs/
+
+3. **Reinicie tudo:**
+   - Stop Tomcat
+   - Project > Clean
+   - Build Project
+   - Start Tomcat
+
+---
+
+## 🎯 RESUMO FINAL
+
+| Etapa | Status | Tempo |
+|-------|--------|-------|
+| 1. Preparar | ✅ Completo | 2 min |
+| 2. Login | ✅ Migração | 3 min |
+| 3. Posts | ✅ Testes | 5 min |
+| **TOTAL** | **✅ PRONTO** | **~10 min** |
+
+---
+
+**Você está pronto para implementar!** 🚀
+
+Comece pela AÇÃO 1 acima e siga em ordem.

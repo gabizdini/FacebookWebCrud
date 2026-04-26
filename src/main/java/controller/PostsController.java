@@ -97,13 +97,19 @@ public class PostsController extends HttpServlet {
 		String postContent = req.getParameter("post_content");
 		Date postDate = new Date();
 		String postUser = req.getParameter("user_id");
+		
+		// Validação: user_id não pode ser null
+		if (postUser == null || postUser.isEmpty()) {
+			throw new IllegalArgumentException("Usuário é obrigatório!");
+		}
+		
 		int postUserId = Integer.parseInt(postUser);
 		UserDAO dao = DAOFactory.createDAO(UserDAO.class);
 	
 		
 		Post post;
 		
-		if (postId.equals(""))
+		if (postId == null || postId.equals(""))
 			post = new Post();
 		else post = new Post(Integer.parseInt(postId));
 		
@@ -178,6 +184,9 @@ public class PostsController extends HttpServlet {
                 throw new ModelException("Post não encontrado para alteração");
 
             req.setAttribute("post", post);
+            
+            // Carregar usuários para o formulário
+            loadUsers(req);
         } catch (ModelException e) {
             // log no servidor
             e.printStackTrace();

@@ -29,15 +29,20 @@
 				</div>
 
 				<div class="mb-3">
-					<label for="post_user" class="form-label">Usuário</label> 
-					<select name="user_id">
+					<label for="user_id" class="form-label">Usuário</label> 
+					<select name="user_id" id="user_id" class="form-control" required>
+						<option value="">-- Selecione um usuário --</option>
 						<c:forEach var="usuario" items="${usuarios}">
-							<option value="${usuario.id}">${usuario.name}</option>
+							<option value="${usuario.id}" 
+								<c:if test="${usuario.id == post.getUser().getId()}">selected</c:if>>
+								${usuario.name}
+							</option>
 						</c:forEach>
 					</select>
 				</div>
 
 				<button type="submit" class="btn btn-primary">Enviar</button>
+				<a href="/facebook/posts" class="btn btn-secondary">Cancelar</a>
 			</form>
 
 			<div class="col-2"></div>
