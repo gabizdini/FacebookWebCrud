@@ -53,6 +53,7 @@ public class PostsController extends HttpServlet {
 		
 		case "/facebook/post/update": {
 			loadPost(req);
+			loadUsers(req);
 
             RequestDispatcher rd = req.getRequestDispatcher("/form_post.jsp");
             rd.forward(req, resp);
@@ -95,32 +96,33 @@ public class PostsController extends HttpServlet {
 	private Post createPost(HttpServletRequest req) {
 		String postId = req.getParameter("post_id");
 		String postContent = req.getParameter("post_content");
-		Date postDate = new Date();
 		String postUser = req.getParameter("user_id");
 		
-		// Validação: user_id não pode ser null
-		if (postUser == null || postUser.isEmpty()) {
-			throw new IllegalArgumentException("Usuário é obrigatório!");
-		}
-		
-		int postUserId = Integer.parseInt(postUser);
 		UserDAO dao = DAOFactory.createDAO(UserDAO.class);
 	
-		
 		Post post;
 		
-		if (postId == null || postId.equals(""))
+		if (postId == null || postId.equals("")) {
+			// Novo post - define data de agora
 			post = new Post();
-		else post = new Post(Integer.parseInt(postId));
-		
+			post.setPostDate(new Date());
+		} else {
+			// Post existente - será atualizado
+			post = new Post(Integer.parseInt(postId));
+			// A data não é alterada na atualização (mantém a original do BD)
+		}
 		
 		post.setContent(postContent);
-		post.setPostDate(postDate);
-		try {
-			post.setUser(dao.findById(postUserId));
-		} catch (ModelException e) {
-			e.printStackTrace();
+		
+		if (postUser != null && !postUser.equals("")) {
+			int postUserId = Integer.parseInt(postUser);
+			try {
+				post.setUser(dao.findById(postUserId));
+			} catch (ModelException e) {
+				e.printStackTrace();
+			}
 		}
+		
 		return post;
 	}
 
@@ -140,6 +142,11 @@ public class PostsController extends HttpServlet {
 	
 	 private void deletePost(HttpServletRequest req) {
 	        String postIdString = req.getParameter("postId");
+	        
+	        if (postIdString == null || postIdString.equals("")) {
+	        	throw new IllegalArgumentException("postId é obrigatório para deletar");
+	        }
+	        
 	        int postId = Integer.parseInt(postIdString);
 
 	        Post post = new Post(postId);
@@ -173,6 +180,10 @@ public class PostsController extends HttpServlet {
 	private void loadPost(HttpServletRequest req) {
         String postIdParameter = req.getParameter("postId");
 
+        if (postIdParameter == null || postIdParameter.equals("")) {
+        	throw new IllegalArgumentException("postId é obrigatório para carregar o post");
+        }
+        
         int postId = Integer.parseInt(postIdParameter);
 
         PostDAO dao = DAOFactory.createDAO(PostDAO.class);
@@ -184,9 +195,6 @@ public class PostsController extends HttpServlet {
                 throw new ModelException("Post não encontrado para alteração");
 
             req.setAttribute("post", post);
-            
-            // Carregar usuários para o formulário
-            loadUsers(req);
         } catch (ModelException e) {
             // log no servidor
             e.printStackTrace();
