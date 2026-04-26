@@ -11,7 +11,7 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebFilter("")
+@WebFilter("/*")
 public class LoginFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, 
