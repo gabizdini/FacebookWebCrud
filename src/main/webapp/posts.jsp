@@ -66,28 +66,5 @@
 		</div>
 	</div>
 	<script src="js/bootstrap.bundle.min.js"></script>
-
-	<script type="text/javascript">
-		/* function interceptClickEvent(e) {
-			var href;
-			var target = e.target || e.srcElement;
-
-			if (target.tagName === 'A') {
-				href = target.getAttribute('href');
-
-				if (href.includes("delete")) {
-
-					let option = window.confirm("Deseja mesmo excluir esse usuário?");
-				}
-			}
-		}
-
-		// Listen for link click events at the document level
-		if (document.addEventListener) {
-			document.addEventListener('click', interceptClickEvent);
-		} else if (document.attachEvent) {
-			document.attachEvent('onclick', interceptClickEvent);
-		} */
-	</script>
 </body>
 </html>
